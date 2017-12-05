@@ -49,7 +49,7 @@ export function writeMessage (content) {
 
 export function getChannels(channels){
   const action = {type: GET_CHANNELS, channels}
-  return action 
+  return action
 }
 
 export function writeChannel (content) {
@@ -101,15 +101,17 @@ export function fetchChannels () {
   }
 }
 
-export function postChannel (message) {
-
+export function postChannel ({name,history}) {
+  console.log("name", name)
   return function thunk (dispatch) {
-    return axios.post('/api/channels', channel)
+    return axios.post('/api/channels', {name})
       .then(res => res.data)
       .then(newChannel => {
+
         const action = getChannel(newChannel);
         dispatch(action);
-        // socket.emit('new-channel', newChannel);
+        history.push(`channels/${newChannel.id}`)
+        socket.emit('new-channel', newChannel);
       });
   }
 
@@ -171,10 +173,13 @@ function reducer (state = initialState, action) {
         ...state,
           channels: action.channels
       };
-    
+    case WRITE_CHANNEL:
+      return { ...state,
+        newChannelEntry: action.content
+      };
     case GET_CHANNEL:
-      return { ...state, 
-        channels: [...state.channels, action.channel] 
+      return { ...state,
+        channels: [...state.channels, action.channel]
       };
 
     default:

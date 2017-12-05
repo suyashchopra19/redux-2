@@ -1,11 +1,19 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux'
+import { writeChannel, postChannel} from '../store';
 
-export default function NewChannelEntry (props) {
+function NewChannelEntry ({newChannelEntry,handleChange,handleSubmit}) {
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="form-group">
         <label htmlFor="name">Create a Channel</label>
-        <input className="form-control" type="text" name="channelName" placeholder="Enter channel name" />
+        <input
+          onChange={handleChange}
+          value={newChannelEntry}
+          className="form-control"
+          type="text"
+          name="channelName"
+          placeholder="Enter channel name" />
       </div>
       <div className="form-group">
         <button type="submit" className="btn btn-default">Create Channel</button>
@@ -14,4 +22,25 @@ export default function NewChannelEntry (props) {
   );
 }
 
+
+const mapStateToProps = (state) => {
+  return {
+    newChannelEntry: state.newChannelEntry
+  }
+}
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    handleChange(event) {
+      dispatch(writeChannel(event.target.value));
+    },
+    handleSubmit(event) {
+      const name = event.target.channelName.value
+      const history = ownProps.history
+      event.preventDefault();
+      dispatch(postChannel({name, history}));
+      ownProps.history.push('/hjgjdg')
+    }
+  }
+}
 /** Write your `connect` component below! **/
+export default connect(mapStateToProps,mapDispatchToProps)(NewChannelEntry)

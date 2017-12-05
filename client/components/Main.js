@@ -24,7 +24,7 @@ export default class Main extends Component {
           <Switch>
             <Route path="/new-channel" component={NewChannelEntry} />
             <Route path="/channels/:channelId" component={MessagesList} />
-            <Redirect to="/channels/1" />
+            {/*}<Redirect to="/channels/1" />*/}
           </Switch>
         </main>
       </div>
