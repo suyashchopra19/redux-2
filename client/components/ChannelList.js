@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import store from '../store';
 import { connect } from 'react-redux'
 
@@ -10,8 +10,7 @@ const GENERAL_CHANNEL = '/channels/2';
 const DOGS_CHANNEL = '/channels/3';
 const LUNCH_CHANNEL = '/channels/4';
 
-const ChannelList = function({ channels  }) {
-  const messages = [];
+const ChannelList = function({ channels, messages  }) {
     return (
       <ul>
       {channels.map(channel=>{
@@ -20,7 +19,7 @@ const ChannelList = function({ channels  }) {
               <span>{channel.name}</span>
               <span className="badge">
                 {
-                  messages.filter(message => message.channelId === 1)
+                  messages.filter(message => message.channelId === channel.id)
                     .length
                 }
               </span>
@@ -34,10 +33,10 @@ const ChannelList = function({ channels  }) {
 
   const mapStateToProps= function(state){
     return {
-      channels: state.channels
+      channels: state.channels,
+      messages: state.messages
     }
   }
 
 /** Write your `connect` component below! **/
-
-export default connect(mapStateToProps)(ChannelList)
+export default withRouter(connect(mapStateToProps)(ChannelList));
